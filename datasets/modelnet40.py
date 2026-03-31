@@ -16,6 +16,7 @@ import torch
 
 from se_math.transformer import SE3Transformer
 from utils import preprocess_data_single, add_gaussian_noise
+from huggingface_hub import hf_hub_download
 
 
 def download():
@@ -24,11 +25,8 @@ def download():
     if not os.path.exists(DATA_DIR):
         os.mkdir(DATA_DIR)
     if not os.path.exists(os.path.join(DATA_DIR, 'modelnet40_ply_hdf5_2048')):
-        www = 'https://huggingface.co/datasets/Msun/modelnet40/blob/d5dc795541800feeb7a4b3bd3142729a0d2adf7a/modelnet40_ply_hdf5_2048.zip'
-        zipfile = os.path.basename(www)
-        os.system('wget %s; unzip %s' % (www, zipfile))
-        os.system('mv %s %s' % (zipfile[:-4], DATA_DIR))
-        os.system('rm %s' % (zipfile))
+        hf_hub_download(repo_id="Msun/modelnet40", filename="modelnet40_ply_hdf5_2048.zip", local_dir=DATA_DIR, repo_type="dataset")
+        os.system("unzip %s -d %s" % (DATA_DIR + "/modelnet40_ply_hdf5_2048.zip", DATA_DIR))
 
 
 def load_data(partition):
