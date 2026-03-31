@@ -32,7 +32,7 @@ if __name__ == '__main__':
         model = TIFRegSimplified(args)
     else:
         model = TIFReg(args)
-    checkpoint = torch.load(args.model_path, weights_only=False)
+    checkpoint = torch.load(args.model_path, weights_only=False, map_location=args.device)
     model.load_state_dict(checkpoint['model'])
     model.to(args.device)
     model.eval()
