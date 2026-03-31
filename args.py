@@ -14,7 +14,7 @@ def global_parameters(argv=None):
 
 
     # Dataset Parameters
-    parser.add_argument('--dataset', default='modelnet', choices=['modelnet', 'bunny', 'tum3d', 'mould', 'mould_random'], type=str,
+    parser.add_argument('--dataset', default='modelnet', choices=['modelnet', 'bunny', 'tum3d'], type=str,
                         help="Name of the dataset to use") # TODO Merge random dataset classes and just change the input target path
     parser.add_argument('--num-points', default=2048, type=int,
                         metavar='N', help='Number of points to use in ModelNet40')
