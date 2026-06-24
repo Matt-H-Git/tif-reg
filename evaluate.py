@@ -1,11 +1,11 @@
 import logging
 import torch
 from torch.utils.data import DataLoader
-
+import os
 from args import global_parameters
 from datasets.modelnet40 import ModelNet40
 from datasets.tum3d import TUM3D
-from tif.model import TIFReg
+from tif.model import TIFReg, TIFRegSimplified
 from trainer import TIFTrain
 
 LOGGER = logging.getLogger(__name__)
@@ -30,8 +30,11 @@ def parameters(argv=None):
 
 # Run through the testing images of ModelNet and accumulate an average loss
 def eval(args, evalloader):
-    model = TIFReg(args)
-    checkpoint = torch.load(args.model_path, weights_only=False)
+    if args.use_simplified:
+        model = TIFRegSimplified(args)
+    else:
+        model = TIFReg(args)
+    checkpoint = torch.load(args.model_path, weights_only=False, map_location=args.device)
     model.load_state_dict(checkpoint['model'])
     model.to(args.device)
     model.eval()
@@ -54,6 +57,8 @@ def get_dataloader(args):
         evalset = ModelNet40(args, 'test')
     elif args.dataset == "tum3d":
         evalset = TUM3D(args, 'test')
+    elif args.dataset == "bunny":
+        raise Exception("bunny dataset has no test set")
     evalloader = DataLoader(evalset, batch_size=args.batch_size, shuffle=False, num_workers=args.workers)
     return evalloader
 
@@ -65,10 +70,14 @@ if __name__ == "__main__":
         ARGS.device = 'cpu'
     ARGS.device = torch.device(ARGS.device)
 
+    logging_path = "./logs"
+    if not os.path.exists(logging_path):
+        os.mkdir(logging_path)
+
     logging.basicConfig(
         level=logging.DEBUG,
         format='%(levelname)s:%(name)s, %(asctime)s, %(message)s',
-        filename="logs/testing.log")
+        filename=f"{logging_path}/testing.log")
 
     dataloader = get_dataloader(ARGS)
 
