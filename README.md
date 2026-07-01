@@ -58,3 +58,21 @@ Same as train except uses a pretrained model and won't modify any gradients (jus
 ## demo.py
 
 Run visualisations of datasets using a pretrained model
+
+# Results
+
+## Time to run (ms)
+| - | Original | w/ shortcut |
+| --- | --- | --- |
+| GPU | 588.1 | 0.583|
+| CPU |  | |
+
+## Accuracy
+Accuracy is the same for both of the versions here, so I compare my implementation to the original results.
+
+The original results are taken from Table 3 in the paper where translation is limited to [-0.5m, 0.5m] and rotation is limited to [-90°, 90°]
+
+| - | Original author | My implementation |
+|---| --------------- | ----------------- |
+| RMSE (R) | 0.052140  | 0.0017 |
+| RMSE (t) | 0.000152  | 0.0029 |
